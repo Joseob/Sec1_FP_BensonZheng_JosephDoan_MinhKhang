@@ -15,7 +15,7 @@ We've curated a couple of examples of past project that can help you. While thei
 - [IMDB Movie Data Analysis by Sanjana, Nishita, and Jess](https://github.com/Stat184-Fall2024/Sec4_FP_SanjanaBandaru_NishitaBhanushali_JesaBurleson)
 s
 
-## Key Dates (4/24/2025)
+## Key Dates (4/24/2025 --)
 
 This project has several key dates that you need to be aware of.
 
