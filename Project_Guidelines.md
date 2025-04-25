@@ -39,11 +39,11 @@ We present the guidelines as a checklist in this file. This means that your team
 - [x] Create a repo using this template repo. Name your repo `Sec#_FP_Name1_Name2_Name3` where `Sec#` is your section of Stat184 (i.e., `Sec1`, `Sec2`, `Sec3`, or `Sec4`) and `Name#` is replaced with the names of each team member.
   - [x] The owner of the repo should be `Stat184-Spring2025`. 
 - [x] Make sure that each team member has access to the repo.
-- [ ] Come up with a topic and set of research questions your team will explore.
-- [ ] Make a plan for your work. We suggested putting together your work plan ASAP.
-- [ ] Locate appropriate data sources for your project.
-  - [ ] Your main data source may __not__ be one that we used in class. If you are interested in using data found in an R package, please consult with your instructor first.
-  - [ ] Supplementary data sources may come from anywhere.
+- [x] Come up with a topic and set of research questions your team will explore.
+- [x] Make a plan for your work. We suggested putting together your work plan ASAP.
+- [x] Locate appropriate data sources for your project.
+  - [x] Your main data source may __not__ be one that we used in class. If you are interested in using data found in an R package, please consult with your instructor first.
+  - [x] Supplementary data sources may come from anywhere.
 - [ ] Read in your data and perform any necessary data tidying, wrangling, and cleaning.
 - [ ] Conduct Exploratory Data Analysis.
 - [ ] Prepare a reproducible report.
