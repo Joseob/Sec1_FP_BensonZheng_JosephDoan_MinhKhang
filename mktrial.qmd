@@ -1,0 +1,37 @@
+---
+title: "NBA Player Salary Analysis: Statistics vs Compensation"
+author: "Khang Le"
+date: "April 25, 2025"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+# Load required libraries
+library(tidyverse)
+library(ggplot2)
+library(corrplot)
+library(knitr)
+library(kableExtra)
+library(scales)
+library(plotly)
+
+# Set global options
+knitr::opts_chunk$set(echo = FALSE, 
+                     warning = FALSE, 
+                     message = FALSE,
+                     fig.width = 10, 
+                     fig.height = 6)
+```
+
+# Introduction
+
+This analysis explores the relationship between NBA player performance and compensation during the 2017-2018 season. We aim to understand which statistical metrics are most highly valued in the market for professional basketball players and identify patterns in how teams allocate their financial resources.
+
+Our research questions include:
+
+1.  What is the relationship between various player performance metrics and salary?
+2.  Are certain positions compensated differently relative to their statistical contributions?
+3.  How does player age affect the salary-performance relationship?
+4.  Which statistical categories have the strongest correlation with compensation?
+
