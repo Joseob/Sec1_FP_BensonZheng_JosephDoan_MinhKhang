@@ -37,7 +37,7 @@ top_paid_players <- nba_joined_filtered %>%
 # Visualizing the Relationships
 ## player vs. salary
 ### Bar graph of top salary players vs. their salary
-ggplot(top_paid_players, aes(x = player, y = Salary)) +
+ggplot(top_paid_players, aes(x = reorder(player, Salary), y = Salary)) +
   geom_bar(stat = "identity", fill="skyblue") +
   labs(title = "Top 10 Highest Paid NBA Players (2023)",
        x = "Player",
@@ -46,21 +46,21 @@ ggplot(top_paid_players, aes(x = player, y = Salary)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), plot.title = element_text(hjust = 0.5))
 
 ## Bar graph of top salary player vs. their age
-ggplot(top_paid_players, aes(x = player, y = age)) +
+ggplot(top_paid_players, aes(x = reorder(player, Salary), y = age)) +
   geom_bar(stat = "identity", fill="skyblue") +
   labs(title = "Players vs. Age",
        x = "Player",
-       y = "Age") +
+       y = "Age (years)") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), plot.title = element_text(hjust = 0.5))
 
 
 ## Bar graph of top salary player vs. their experience
-ggplot(top_paid_players, aes(x = player, y = experience)) +
+ggplot(top_paid_players, aes(x = reorder(player, Salary), y = experience)) +
   geom_bar(stat = "identity", fill="skyblue") +
   labs(title = "Players vs. Experience",
        x = "Player",
-       y = "Experience") +
+       y = "Experience (seasons)") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), plot.title = element_text(hjust = 0.5))
 
