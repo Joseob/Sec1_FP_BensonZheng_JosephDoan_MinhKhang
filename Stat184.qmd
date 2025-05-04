@@ -454,9 +454,7 @@ Future research could expand this analysis by incorporating more detailed perfor
 
 # References
 
-@BasketballReference2025. (2025). Basketball Statistics & History of Every Team & NBA and WNBA Players. Basketball-Reference.com. https://www.basketball-reference.com/
 
-@NBASalaryCap2025. (2025). NBA Salary Cap History. Basketball Reference. https://www.basketball-reference.com/contracts/salary-cap-history.html
 
 @Wilkinson2016. Wilkinson, M. D., Dumontier, M., Aalbersberg, I. J., Appleton, G., Axton, M., Baak, A., Blomberg, N., Boiten, J. W., da Silva Santos, L. B., Bourne, P. E., Bouwman, J., Brookes, A. J., Clark, T., Crosas, M., Dillo, I., Dumon, O., Edmunds, S., Evelo, C. T., Finkers, R., ... Mons, B. (2016). The FAIR Guiding Principles for scientific data management and stewardship. Scientific Data, 3, 160018. https://doi.org/10.1038/sdata.2016.18
 
