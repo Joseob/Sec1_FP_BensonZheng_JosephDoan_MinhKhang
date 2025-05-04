@@ -1,242 +1,236 @@
-# NBA Player Salary and Performance Analysis (2022-2023)
-# Following feedback to improve visualization clarity and efficiency
-
-# Load necessary libraries -----
+# 1) Load libraries
 library(tidyverse)
 library(readr)
+library(dplyr)
 library(ggplot2)
-library(kableExtra)
 library(scales)
+library(knitr)
+library(kableExtra)
+library(corrplot)
+library(ggrepel) 
+# 2) Read raw data
+stats    <- read_csv("nba_1947-2025_stats.csv", show_col_types = FALSE)
+salaries <- read_csv("nba_salaries_22-23.csv", show_col_types = FALSE) %>%
+  select(-...1) 
 
-# Load datasets -----
-stats <- read_csv("nba_1947-2025_stats.csv")
-salaries <- read_csv("nba_salaries_22-23.csv")
+# 3) Standardize player names
+stats <- stats %>%
+  mutate(player = str_to_lower(str_squish(player)))
 
-# Data preparation -----
+salaries <- salaries %>%
+  rename(player = `Player Name`, pos = Position) %>%  # rename Position → pos
+  mutate(player = str_to_lower(str_squish(player)))
+
+# 4) Filter stats to the 2023 season
 stats_2023 <- stats %>%
-  filter(season == 2023) %>%
+  filter(season == 2023) %>%       # use the lowercase 'season' column
+  select(player, age, experience) %>%
   distinct(player, .keep_all = TRUE)
 
-salaries_clean <- salaries %>%
-  rename(player = "Player Name") %>%
-  mutate(
-    player = str_trim(player),
-    Salary = ifelse(is.character(Salary), 
-                    as.numeric(gsub("[$,]", "", Salary)), 
-                    Salary)
-  )
+# 5) Join the two tables
+nba_joined <- inner_join(stats_2023, salaries, by = "player")
 
-# Join datasets -----
-nba_joined <- inner_join(stats_2023, salaries_clean, by = "player")
-
-# Get top 10 highest paid players -----
-top_paid_players <- nba_joined %>%
+# 6) Extract the top 10 highest‐paid players
+top10 <- nba_joined %>%
   arrange(desc(Salary)) %>%
   slice_head(n = 10)
 
-# IMPROVEMENT 1: Combined age/salary visualization for top 10 players -----
-# Create age groups for clearer visualization
-age_groups <- nba_joined %>%
-  mutate(
-    age_group = cut(age, 
-                    breaks = c(0, 25, 30, 35, 100),
-                    labels = c("Under 25", "25-29", "30-34", "35+"),
-                    right = FALSE)
-  )
-
-# Create combined visualization for top 10 players
-top_10_combined <- ggplot(top_paid_players, aes(x = reorder(player, Salary))) +
-  geom_bar(aes(y = Salary/1000000), stat = "identity", fill = "steelblue", alpha = 0.7) +
-  geom_point(aes(y = age * 2), color = "red", size = 3) +
-  geom_line(aes(y = age * 2, group = 1), color = "red", linetype = "dashed") +
+# 7) Plot 1: Top 10 salaries with Age overlaid
+ggplot(top10, aes(x = reorder(player, -Salary))) +
+  geom_col(aes(y = Salary/1e6), fill = "steelblue", alpha = 0.8) +
+  geom_point(aes(y = age * 1.2), color = "firebrick", size = 3) +
+  geom_line(aes(y = age * 1.2, group = 1),
+            color = "firebrick", linetype = "dashed") +
   scale_y_continuous(
-    name = "Salary (Million $)",
-    labels = dollar_format(suffix = "M"),
-    sec.axis = sec_axis(~./2, name = "Age (years)")
+    name      = "Salary (Million $)",
+    labels    = dollar_format(prefix = "$", suffix = "M"),
+    sec.axis  = sec_axis(~./1.2, name = "Age (years)")
   ) +
-  labs(title = "Top 10 Highest Paid NBA Players: Salary and Age",
-       subtitle = "Blue bars show salary, red dots show age",
-       x = "Player") +
+  labs(
+    title = "Top 10 NBA 2022–23 Salaries & Player Age",
+    x     = "Player (by descending salary)"
+  ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-print(top_10_combined)
-
-# IMPROVEMENT 2: Combined experience/salary visualization for top 10 players -----
-top_10_combined_exp <- ggplot(top_paid_players, aes(x = reorder(player, Salary))) +
-  geom_bar(aes(y = Salary/1000000), stat = "identity", fill = "steelblue", alpha = 0.7) +
-  geom_point(aes(y = experience * 2), color = "darkorange", size = 3) +
-  geom_line(aes(y = experience * 2, group = 1), color = "darkorange", linetype = "dashed") +
-  scale_y_continuous(
-    name = "Salary (Million $)",
-    labels = dollar_format(suffix = "M"),
-    sec.axis = sec_axis(~./2, name = "Experience (years)")
-  ) +
-  labs(title = "Top 10 Highest Paid NBA Players: Salary and Experience",
-       subtitle = "Blue bars show salary, orange dots show experience",
-       x = "Player") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-print(top_10_combined_exp)
-
-# IMPROVEMENT 3: Summary tables by age groups -----
-age_group_summary <- age_groups %>%
+# 8) Summary table: Salary by age group
+age_summary <- nba_joined %>%
+  mutate(age_group = cut(
+    age,
+    breaks = c(0, 25, 30, 35, Inf),
+    labels = c("Under 25", "25–29", "30–34", "35+"),
+    right  = FALSE
+  )) %>%
   group_by(age_group) %>%
   summarise(
-    n_players = n(),
-    mean_salary = mean(Salary, na.rm = TRUE),
-    median_salary = median(Salary, na.rm = TRUE),
-    mean_per = mean(per, na.rm = TRUE),
-    mean_ws = mean(ws, na.rm = TRUE)
-  )
+    Count         = n(),
+    Mean_Salary   = mean(Salary, na.rm = TRUE),
+    Median_Salary = median(Salary, na.rm = TRUE),
+    Max_Salary    = max(Salary, na.rm = TRUE),
+    Min_Salary    = min(Salary, na.rm = TRUE)
+  ) %>%
+  arrange(desc(Mean_Salary))
 
-kable(age_group_summary, 
-      col.names = c("Age Group", "Players", "Mean Salary ($)", "Median Salary ($)", 
-                    "Mean PER", "Mean Win Shares"),
-      format.args = list(big.mark = ","),
-      caption = "NBA Player Statistics by Age Group (2022-2023)",
-      digits = c(0, 0, 0, 0, 1, 1)) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+# Print & render the table
+print(age_summary)
+kable(age_summary,
+      col.names = c("Age Group", "Count", "Mean $", "Median $", "Max $", "Min $"),
+      digits    = 0,
+      format    = "html",
+      caption   = "NBA 2022–23: Salary by Age Group") %>%
+  kable_styling(full_width = FALSE)
 
-# IMPROVEMENT 4: Scatter plot of age vs salary for all players -----
-age_salary_scatter <- ggplot(nba_joined, aes(x = age, y = Salary/1000000)) +
-  geom_point(aes(color = pos, size = per), alpha = 0.7) +
-  geom_smooth(method = "loess", se = TRUE, color = "black") +
-  labs(title = "NBA Player Age vs. Salary (2022-2023)",
-       subtitle = "Point size represents Player Efficiency Rating (PER)",
-       x = "Age (years)",
-       y = "Salary (Million $)",
-       color = "Position",
-       size = "PER") +
-  scale_y_continuous(labels = dollar_format(suffix = "M")) +
-  theme_minimal() +
-  theme(legend.position = "right")
-
-print(age_salary_scatter)
-
-# IMPROVEMENT 5: Experience vs salary with age groups as color -----
-exp_salary_scatter <- ggplot(nba_joined, aes(x = experience, y = Salary/1000000)) +
-  geom_point(aes(color = age), alpha = 0.7, size = 3) +
-  geom_smooth(method = "loess", se = TRUE, color = "black") +
-  scale_color_gradient(low = "blue", high = "red") +
-  labs(title = "NBA Player Experience vs. Salary (2022-2023)",
-       subtitle = "Color intensity represents player age",
-       x = "Years of Experience",
-       y = "Salary (Million $)",
-       color = "Age") +
-  scale_y_continuous(labels = dollar_format(suffix = "M")) +
+# 9) Plot 2: Age vs. Salary by position
+ggplot(nba_joined, aes(x = age, y = Salary/1e6, color = pos)) +
+  geom_jitter(width = 0.3, height = 0, alpha = 0.7) +
+  geom_smooth(method = "loess", se = TRUE) +
+  scale_y_continuous(labels = dollar_format(prefix = "$", suffix = "M")) +
+  labs(
+    title = "NBA 2022–23: Age vs. Salary by Position",
+    x     = "Age (years)",
+    y     = "Salary (Million $)",
+    color = "Position"
+  ) +
   theme_minimal()
 
-print(exp_salary_scatter)
+# 10) Plot 3: Experience vs. Salary by position
+ggplot(nba_joined, aes(x = experience, y = Salary/1e6, color = pos)) +
+  geom_jitter(width = 0.2, height = 0, alpha = 0.7) +
+  geom_smooth(method = "loess", se = TRUE) +
+  scale_y_continuous(labels = dollar_format(prefix = "$", suffix = "M")) +
+  labs(
+    title = "NBA 2022–23: Experience vs. Salary by Position",
+    x     = "Experience (years)",
+    y     = "Salary (Million $)",
+    color = "Position"
+  ) +
+  theme_minimal()
 
-# IMPROVEMENT 6: Position-specific analysis table -----
-position_summary <- nba_joined %>%
-  group_by(pos) %>%
+
+
+
+# INSIGHT 1: Team Salary Analysis ----
+# Calculate team total salaries
+team_analysis <- nba_joined %>%
+  group_by(Team) %>%
   summarise(
-    n_players = n(),
-    mean_salary = mean(Salary, na.rm = TRUE),
-    median_salary = median(Salary, na.rm = TRUE),
-    mean_age = mean(age, na.rm = TRUE),
-    mean_experience = mean(experience, na.rm = TRUE),
-    mean_per = mean(per, na.rm = TRUE)
+    total_salary = sum(Salary, na.rm = TRUE),
+    avg_salary = mean(Salary, na.rm = TRUE),
+    player_count = n()
   ) %>%
-  arrange(desc(mean_salary))
+  arrange(desc(total_salary))
 
-kable(position_summary, 
-      col.names = c("Position", "Players", "Mean Salary ($)", "Median Salary ($)", 
-                    "Mean Age", "Mean Experience", "Mean PER"),
-      format.args = list(big.mark = ","),
-      caption = "NBA Player Statistics by Position (2022-2023)",
-      digits = c(0, 0, 0, 0, 1, 1, 1)) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
-
-# IMPROVEMENT 7: Correlation between age, experience, and salary -----
-correlation_matrix <- nba_joined %>%
-  select(age, experience, Salary, per, ws, vorp) %>%
-  cor(use = "complete.obs")
-
-# Create correlation plot
-correlation_plot <- ggplot(data = reshape2::melt(correlation_matrix), 
-                           aes(x = Var1, y = Var2, fill = value)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1,1), space = "Lab", 
-                       name = "Correlation") +
+# Visualize team salaries
+ggplot(team_analysis, aes(x = reorder(Team, -total_salary), y = total_salary/1000000)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = paste0("$", round(total_salary/1000000, 0), "M")),
+            vjust = -0.3, size = 3) +
+  scale_y_continuous(labels = dollar_format(suffix = "M")) +
+  labs(
+    title = "NBA Team Total Salary Expenditure (2022-2023)",
+    x = "Team",
+    y = "Total Salary (Millions $)"
+  ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
-  labs(title = "Correlation Matrix: Player Attributes", 
-       x = "", y = "") +
-  geom_text(aes(label = round(value, 2)), color = "black", size = 4)
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
-print(correlation_plot)
+# INSIGHT 2: Salary Cap Context  ----
+# 2022-2023 Salary Cap was $123.7 million
+SALARY_CAP <- 123655000
 
-# IMPROVEMENT 8: 3D surface plot for age, experience, and salary relationship -----
-library(plotly)
+# Calculate team spending relative to cap
+team_cap_analysis <- nba_joined %>%
+  group_by(Team) %>%
+  summarise(
+    total_team_salary = sum(Salary, na.rm = TRUE),
+    pct_of_cap = total_team_salary / SALARY_CAP * 100,
+    number_of_players = n()
+  ) %>%
+  arrange(desc(pct_of_cap))
 
-age_experience_salary <- nba_joined %>%
-  na.omit() %>%
-  group_by(age, experience) %>%
-  summarise(avg_salary = mean(Salary)/1000000) %>%
-  ungroup()
+# Visualize team spending relative to cap
+ggplot(team_cap_analysis, aes(x = reorder(Team, -pct_of_cap), y = pct_of_cap)) +
+  geom_bar(stat = "identity", aes(fill = pct_of_cap)) +
+  geom_hline(yintercept = 100, linetype = "dashed", color = "red") +
+  geom_text(aes(label = paste0(round(pct_of_cap, 1), "%")), 
+            hjust = -0.1, vjust = 0.5, size = 3, angle = 90) +
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +
+  coord_flip() +
+  labs(
+    title = "NBA Team Spending Relative to Salary Cap (2022-2023)",
+    subtitle = "Red line indicates the salary cap ($123.7M)",
+    x = "Team",
+    y = "Percentage of Salary Cap (%)"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
 
-plot_ly(age_experience_salary, 
-        x = ~age, 
-        y = ~experience, 
-        z = ~avg_salary,
-        type = "scatter3d",
-        mode = "markers",
-        marker = list(size = 5, color = ~avg_salary, colorscale = 'Viridis')) %>%
-  layout(title = "Age, Experience, and Salary Relationship",
-         scene = list(xaxis = list(title = "Age"),
-                      yaxis = list(title = "Experience"),
-                      zaxis = list(title = "Average Salary ($M)")))
+# INSIGHT 3: Maximum Contract Analysis ----
+# In 2022-23, max contracts were:
+# 0-6 years: 25% of cap = ~$30.9M
+# 7-9 years: 30% of cap = ~$37.1M
+# 10+ years: 35% of cap = ~$43.3M
 
-# IMPROVEMENT 9: Value efficiency visualization -----
-# Calculate value metric
-nba_joined <- nba_joined %>%
+# Create the maximum contract data
+max_contract_data <- data.frame(
+  experience_tier = c("0-6 years", "7-9 years", "10+ years"),
+  max_amount = c(30900000, 37100000, 43300000)
+)
+
+# Find players near max contracts
+
+max_contract_players <- nba_joined %>%
+  # Create max_tier as a new column
   mutate(
-    value_score = ifelse(ws > 0 & Salary > 0, 
-                         ws / (Salary/1000000), 
-                         NA),
-    efficiency_group = cut(value_score,
-                           breaks = c(-Inf, 0.5, 1, 1.5, Inf),
-                           labels = c("Low Value", "Medium Value", "High Value", "Exceptional Value"))
-  )
-
-# Create value efficiency plot
-value_efficiency_plot <- ggplot(nba_joined %>% filter(!is.na(value_score)), 
-                                aes(x = Salary/1000000, y = ws)) +
-  geom_point(aes(color = efficiency_group, size = per), alpha = 0.7) +
-  geom_smooth(method = "lm", se = FALSE, color = "black", linetype = "dashed") +
-  scale_color_manual(values = c("red", "orange", "lightgreen", "darkgreen")) +
-  labs(title = "Player Value Efficiency: Win Shares vs. Salary",
-       subtitle = "Point size represents PER",
-       x = "Salary (Million $)",
-       y = "Win Shares",
-       color = "Value Efficiency",
-       size = "PER") +
-  scale_x_continuous(labels = dollar_format(suffix = "M")) +
-  theme_minimal()
-
-print(value_efficiency_plot)
-
-# Create a summary table of player efficiency
-efficiency_summary <- nba_joined %>%
-  filter(!is.na(efficiency_group)) %>%
-  group_by(efficiency_group) %>%
-  summarise(
-    n_players = n(),
-    avg_salary = mean(Salary),
-    avg_per = mean(per, na.rm = TRUE),
-    avg_value_score = mean(value_score, na.rm = TRUE)
+    max_tier = case_when(
+      experience <= 6 ~ "0-6 years",
+      experience >= 7 & experience <= 9 ~ "7-9 years",
+      experience >= 10 ~ "10+ years",
+      TRUE ~ NA_character_  # Handle any unexpected values
+    )
   ) %>%
-  arrange(desc(avg_value_score))
+  # Create factor with explicit levels to control ordering
+  mutate(
+    max_tier = factor(max_tier, levels = c("0-6 years", "7-9 years", "10+ years"))
+  ) %>%
+  # Join with the max contract data
+  left_join(max_contract_data, by = c("max_tier" = "experience_tier")) %>%
+  # Calculate percentage of max and identify near-max players
+  mutate(
+    pct_of_max = Salary / max_amount * 100,
+    near_max = pct_of_max > 85
+  ) %>%
+  # Filter to only players near the max
+  filter(near_max) %>%
+  # Select only relevant columns
+  select(player, pos, age, experience, Salary, max_amount, pct_of_max, max_tier) %>%  # Added max_tier here
+  # Sort by percentage of max
+  arrange(desc(pct_of_max))
 
-kable(efficiency_summary, 
-      col.names = c("Value Category", "Players", "Average Salary ($)", 
-                    "Average PER", "Average Value Score"),
-      format.args = list(big.mark = ","),
-      caption = "Player Value Efficiency Summary",
-      digits = c(0, 0, 0, 1, 2)) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+
+# Visualize players on max contracts
+ggplot(max_contract_players, aes(x = reorder(player, pct_of_max), y = pct_of_max)) +
+  geom_bar(stat = "identity", aes(fill = max_tier)) +
+  geom_hline(yintercept = 100, linetype = "dashed", color = "red") +
+  geom_text(aes(label = paste0(round(pct_of_max, 1), "%")), 
+            hjust = -0.1, size = 3) +
+  coord_flip() +
+  labs(
+    title = "NBA Players on Near-Maximum Contracts (2022-2023)",
+    subtitle = "Red line indicates 100% of maximum available contract",
+    x = "Player",
+    y = "Percentage of Maximum Contract (%)",
+    fill = "Experience Tier"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
