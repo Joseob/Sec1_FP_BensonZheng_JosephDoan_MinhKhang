@@ -70,7 +70,7 @@ By exploring these questions, we aim to provide insights into the economics of N
 
 ## Data Sources and Collection
 
-For this analysis, we utilized two primary datasets from Kaggle:
+For this analysis, we utilized two primary datasets:
 
 1. **NBA Historical Statistics (1947-2025)**: This comprehensive dataset contains player performance metrics spanning from the NBA's inception through the 2022-2023 season. The data was originally collected by Basketball Reference (www.basketball-reference.com), which serves as the official historical statistics partner of the NBA. Basketball Reference collects these statistics directly from official NBA game data, providing a reliable and authoritative source of information.
 
@@ -106,9 +106,9 @@ The datasets we used are publicly findable through well-established basketball r
 
 The data is freely accessible to the public through:
 
-- Basketball Reference website (www.basketball-reference.com)
+- Basketball Reference website
 - Sports data repositories like Kaggle
-- NBA's official statistical database (www.nba.com/stats)
+- NBA's official statistical database (
 
 These platforms provide open access to the data without requiring specialized authentication beyond basic website registration in some cases.
 
@@ -175,7 +175,7 @@ These derived attributes help identify patterns across different career stages a
 
 Figure 1 shows the distribution of player salaries across the NBA during the 2022-2023 season, with a focus on the top 10 highest-paid players.
 
-```{r top10_plot, fig.cap="Top 10 NBA 2022-23 Salaries & Player Age. Blue bars represent salary values while red points indicate player age."}
+```{r top10_plot, fig.cap="Figure 1: Top 10 NBA 2022-23 Salaries & Player Age. Blue bars represent salary values while red points indicate player age."}
 # Plot 1: Top 10 salaries with Age overlaid
 ggplot(top10, aes(x = reorder(player, -Salary))) +
   geom_col(aes(y = Salary/1e6), fill = "steelblue", alpha = 0.8) +
@@ -200,7 +200,7 @@ Figure 1 reveals that the highest-paid NBA players in the 2022-2023 season earne
 
 To better understand how age influences salary across the entire league, we categorized players into age groups and analyzed the salary distribution within each group.
 
-```{r age_analysis, fig.cap="Age vs. Salary by Position. This scatter plot shows the relationship between player age and salary, with different positions represented by different colors."}
+```{r age_analysis, fig.cap="Figure 2: Age vs. Salary by Position. This scatter plot shows the relationship between player age and salary, with different positions represented by different colors."}
 # Create age groups
 age_summary <- nba_joined %>%
   mutate(age_group = cut(
@@ -223,11 +223,9 @@ age_summary <- nba_joined %>%
 kable(age_summary,
       col.names = c("Age Group", "Count", "Mean $", "Median $", "Max $", "Min $"),
       digits    = 0,
-      caption   = "Table 1: NBA 2022-23 - Salary Statistics by Age Group",
       format    = "latex",
-      booktabs = TRUE
-  ) %>%
-  kable_styling(latex_options = c("striped", "hold_position"))
+      caption   = "Table 1: NBA 2022-23 - Salary Statistics by Age Group",
+      booktabs = TRUE)
 
 # Plot 2: Age vs. Salary by position
 ggplot(nba_joined, aes(x = age, y = Salary/1e6, color = pos)) +
@@ -254,7 +252,7 @@ This pattern reflects the NBA's salary structure, which rewards players for thei
 
 Experience often provides a more direct relationship with salary than age, as NBA contracts are structured around years of service.
 
-```{r experience_analysis, fig.cap="Experience vs. Salary by Position. This visualization shows how player salary increases with experience levels, with different trajectories by position."}
+```{r experience_analysis, fig.cap="Figure 3: Experience vs. Salary by Position. This visualization shows how player salary increases with experience levels, with different trajectories by position."}
 # Plot 3: Experience vs. Salary by position
 ggplot(nba_joined, aes(x = experience, y = Salary/1e6, color = pos)) +
   geom_jitter(width = 0.2, height = 0, alpha = 0.7) +
@@ -274,13 +272,13 @@ Figure 3 illustrates a stronger positive correlation between years of experience
 2. A plateau period during years 10-14
 3. A decline for players with 15+ years of experience
 
-This pattern directly reflects the NBA's collective bargaining agreement structure, which ties maximum salary potential to years of service. Players with 0-6 years of experience can earn up to 25% of the salary cap, those with 7-9 years can earn up to 30%, and players with 10+ years can earn up to 35%.
+This pattern directly reflects the NBA's collective bargaining agreement structure, which ties maximum salary potential to years of service. Players with 0-6 years of experience can earn up to 25% of the salary cap, those with 7-9 years can earn up to 30%, and players with 10+ years can earn up to 35% [@NBASalaryCap2025].
 
 ## Team Salary Analysis
 
 Understanding how teams allocate their salary resources provides insight into different franchise strategies and financial positions.
 
-```{r team_analysis, fig.cap="NBA Team Total Salary Expenditure (2022-2023). This bar chart shows the total player salary expenditure by NBA team, sorted from highest to lowest."}
+```{r team_analysis, fig.cap="Figure 4: NBA Team Total Salary Expenditure (2022-2023). This bar chart shows the total player salary expenditure by NBA team, sorted from highest to lowest."}
 # Calculate team total salaries
 team_analysis <- nba_joined %>%
   group_by(Team) %>%
@@ -313,7 +311,7 @@ Figure 4 shows significant variation in total salary expenditure across NBA team
 
 The NBA operates under a "soft" salary cap system that allows teams to exceed the cap under certain conditions but imposes luxury tax penalties for doing so. For the 2022-2023 season, the salary cap was set at $123.7 million.
 
-```{r salary_cap_analysis, fig.cap="NBA Team Spending Relative to Salary Cap (2022-2023). This chart shows team spending as a percentage of the $123.7M salary cap, with the red line indicating 100% of the cap."}
+```{r salary_cap_analysis, fig.cap="Figure 5: NBA Team Spending Relative to Salary Cap (2022-2023). This chart shows team spending as a percentage of the $123.7M salary cap, with the red line indicating 100% of the cap."}
 # 2022-2023 Salary Cap was $123.7 million
 SALARY_CAP <- 123655000
 
@@ -352,7 +350,7 @@ Figure 5 reveals that nearly all NBA teams exceeded the salary cap during the 20
 
 The NBA's collective bargaining agreement establishes maximum contract values based on a player's years of experience. Understanding which players are earning close to their maximum potential provides insight into player valuation.
 
-```{r max_contract_analysis, fig.cap="NBA Players on Near-Maximum Contracts (2022-2023). This chart shows players earning at least 85% of their maximum possible salary based on experience tier."}
+```{r max_contract_analysis, fig.cap="Figure 6: NBA Players on Near-Maximum Contracts (2022-2023). This chart shows players earning at least 85% of their maximum possible salary based on experience tier."}
 # Create the maximum contract data
 max_contract_data <- data.frame(
   experience_tier = c("0-6 years", "7-9 years", "10+ years"),
@@ -456,7 +454,12 @@ Team spending patterns demonstrate how the NBA's soft cap and luxury tax system 
 Future research could expand this analysis by incorporating more detailed performance metrics, examining salary efficiency (performance per dollar), and tracking longitudinal changes in salary structures over multiple seasons. Additionally, comparative analysis between the NBA and other professional sports leagues could provide broader context for understanding player compensation models.
 
 # References
-
+@BasketballReference2025. (2025). Basketball Statistics & History of Every Team & NBA and WNBA Players. Basketball-Reference.com. https://www.basketball-reference.com/
+@NBASalaryCap2025. (2025). NBA Salary Cap History. Basketball Reference. https://www.basketball-reference.com/contracts/salary-cap-history.html
+@Datta, S. (2022). NBA, ABA, and BAA Stats. Kaggle. https://www.kaggle.com/datasets/sumitrodatta/nba-aba-baa-stats
+NBA Stats (1947-present)
+Regular Season Data from Basketball-Reference over 73+ Years
+@Welsh, J. (2023). NBA Player Salaries 2022-23 Season. Kaggle. https://www.kaggle.com/datasets/jamiewelsh2/nba-player-salaries-2022-23-season
 
 
 # Code Appendix
