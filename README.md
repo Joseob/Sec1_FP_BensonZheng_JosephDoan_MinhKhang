@@ -13,8 +13,8 @@ One key insight is that NBA player salaries follow an "inverted U" pattern with 
 
 ## Repo Structure
 
-1. data                    - Raw and cleaned datasets (e.g., salaries, stats)
-2. plots                   - Exported visualizations (PNG/JPG)
+1. data                    - Raw and cleaned datasets
+2. plots                   - Exported visualizations 
 3. scripts                 - R scripts for analysis and visualization
 4. report                  - Final Report PDF
 5. README.md               - This file
