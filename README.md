@@ -13,11 +13,11 @@ One key insight is that NBA player salaries follow an "inverted U" pattern with 
 
 ## Repo Structure
 
-├── data/                  # Raw and cleaned datasets (e.g., salaries, stats)
-├── plots/                 # Exported visualizations (PNG/JPG)
-├── scripts/               # R scripts for analysis and visualization
-├── report/                # Final Report PDF
-└── README.md              # This file
+1. data                    - Raw and cleaned datasets (e.g., salaries, stats)
+2. plots                   - Exported visualizations (PNG/JPG)
+3. scripts                 - R scripts for analysis and visualization
+4. report                  - Final Report PDF
+5. README.md               - This file
 
 ## Data Sources and Acknowledgements
 - **NBA Historical Statistics (1947–2025)**: Player performance data from [Basketball Reference](https://www.basketball-reference.com)
