@@ -224,6 +224,7 @@ kable(age_summary,
       col.names = c("Age Group", "Count", "Mean $", "Median $", "Max $", "Min $"),
       digits    = 0,
       caption   = "Table 1: NBA 2022-23 - Salary Statistics by Age Group",
+      format    = "latex",
       booktabs = TRUE
   ) %>%
   kable_styling(latex_options = c("striped", "hold_position"))
@@ -273,7 +274,7 @@ Figure 3 illustrates a stronger positive correlation between years of experience
 2. A plateau period during years 10-14
 3. A decline for players with 15+ years of experience
 
-This pattern directly reflects the NBA's collective bargaining agreement structure, which ties maximum salary potential to years of service. Players with 0-6 years of experience can earn up to 25% of the salary cap, those with 7-9 years can earn up to 30%, and players with 10+ years can earn up to 35% [@NBASalaryCap2025].
+This pattern directly reflects the NBA's collective bargaining agreement structure, which ties maximum salary potential to years of service. Players with 0-6 years of experience can earn up to 25% of the salary cap, those with 7-9 years can earn up to 30%, and players with 10+ years can earn up to 35%.
 
 ## Team Salary Analysis
 
