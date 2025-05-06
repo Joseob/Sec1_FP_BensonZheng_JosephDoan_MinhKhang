@@ -175,7 +175,7 @@ These derived attributes help identify patterns across different career stages a
 
 Figure 1 shows the distribution of player salaries across the NBA during the 2022-2023 season, with a focus on the top 10 highest-paid players.
 
-```{r top10_plot, fig.cap="Figure 1: Top 10 NBA 2022-23 Salaries & Player Age. Blue bars represent salary values while red points indicate player age."}
+```{r top10_plot, fig.cap="Top 10 NBA 2022-23 Salaries & Player Age. Blue bars represent salary values while red points indicate player age."}
 # Plot 1: Top 10 salaries with Age overlaid
 ggplot(top10, aes(x = reorder(player, -Salary))) +
   geom_col(aes(y = Salary/1e6), fill = "steelblue", alpha = 0.8) +
@@ -200,7 +200,7 @@ Figure 1 reveals that the highest-paid NBA players in the 2022-2023 season earne
 
 To better understand how age influences salary across the entire league, we categorized players into age groups and analyzed the salary distribution within each group.
 
-```{r age_analysis, fig.cap="Figure 2: Age vs. Salary by Position. This scatter plot shows the relationship between player age and salary, with different positions represented by different colors."}
+```{r age_analysis, fig.cap="Age vs. Salary by Position. This scatter plot shows the relationship between player age and salary, with different positions represented by different colors."}
 # Create age groups
 age_summary <- nba_joined %>%
   mutate(age_group = cut(
@@ -252,7 +252,7 @@ This pattern reflects the NBA's salary structure, which rewards players for thei
 
 Experience often provides a more direct relationship with salary than age, as NBA contracts are structured around years of service.
 
-```{r experience_analysis, fig.cap="Figure 3: Experience vs. Salary by Position. This visualization shows how player salary increases with experience levels, with different trajectories by position."}
+```{r experience_analysis, fig.cap="Experience vs. Salary by Position. This visualization shows how player salary increases with experience levels, with different trajectories by position."}
 # Plot 3: Experience vs. Salary by position
 ggplot(nba_joined, aes(x = experience, y = Salary/1e6, color = pos)) +
   geom_jitter(width = 0.2, height = 0, alpha = 0.7) +
@@ -278,7 +278,7 @@ This pattern directly reflects the NBA's collective bargaining agreement structu
 
 Understanding how teams allocate their salary resources provides insight into different franchise strategies and financial positions.
 
-```{r team_analysis, fig.cap="Figure 4: NBA Team Total Salary Expenditure (2022-2023). This bar chart shows the total player salary expenditure by NBA team, sorted from highest to lowest."}
+```{r team_analysis, fig.cap="NBA Team Total Salary Expenditure (2022-2023). This bar chart shows the total player salary expenditure by NBA team, sorted from highest to lowest."}
 # Calculate team total salaries
 team_analysis <- nba_joined %>%
   group_by(Team) %>%
@@ -311,7 +311,7 @@ Figure 4 shows significant variation in total salary expenditure across NBA team
 
 The NBA operates under a "soft" salary cap system that allows teams to exceed the cap under certain conditions but imposes luxury tax penalties for doing so. For the 2022-2023 season, the salary cap was set at $123.7 million.
 
-```{r salary_cap_analysis, fig.cap="Figure 5: NBA Team Spending Relative to Salary Cap (2022-2023). This chart shows team spending as a percentage of the $123.7M salary cap, with the red line indicating 100% of the cap."}
+```{r salary_cap_analysis, fig.cap="NBA Team Spending Relative to Salary Cap (2022-2023). This chart shows team spending as a percentage of the $123.7M salary cap, with the red line indicating 100% of the cap."}
 # 2022-2023 Salary Cap was $123.7 million
 SALARY_CAP <- 123655000
 
@@ -350,7 +350,7 @@ Figure 5 reveals that nearly all NBA teams exceeded the salary cap during the 20
 
 The NBA's collective bargaining agreement establishes maximum contract values based on a player's years of experience. Understanding which players are earning close to their maximum potential provides insight into player valuation.
 
-```{r max_contract_analysis, fig.cap="Figure 6: NBA Players on Near-Maximum Contracts (2022-2023). This chart shows players earning at least 85% of their maximum possible salary based on experience tier."}
+```{r max_contract_analysis, fig.cap="NBA Players on Near-Maximum Contracts (2022-2023). This chart shows players earning at least 85% of their maximum possible salary based on experience tier."}
 # Create the maximum contract data
 max_contract_data <- data.frame(
   experience_tier = c("0-6 years", "7-9 years", "10+ years"),
