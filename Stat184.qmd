@@ -108,7 +108,7 @@ The data is freely accessible to the public through:
 
 - Basketball Reference website
 - Sports data repositories like Kaggle
-- NBA's official statistical database (
+- NBA's official statistical database
 
 These platforms provide open access to the data without requiring specialized authentication beyond basic website registration in some cases.
 
