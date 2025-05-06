@@ -1,23 +1,32 @@
-# Project Title
+# Project Title: NBA Salary Analysis: Relationships Between Players' Performance, Experience, and Compensation
 
-Write a 1-2 sentences that quickly and clearly convey what your repo is for.
+This project analyzes how player performance, age, and experience influence salary compensation in the NBA. It provides insights into league salary structures, contract tiers, and team spending patterns for the 2022–2023 season.
 
 ## Overview
 
-Expand on those introductory sentences with a brief but informative description of your project's purpose and goals. This section should help visitors decide whether they should dig deeper into your repo/project.
+In professional basketball, understanding salary allocation is vital for evaluating player value. This project explores how demographic and performance factors correlate with salary, with a focus on player age, experience, position, and team payrolls. Using NBA salary and performance data, we investigate compensation patterns across the league.
 
 ### Interesting Insight
 
-This is optional but highly recommended. You'll include one interesting insight from your project as part of the README. This insight is most effective when you include a visual. Keep in mind that this visual must be included as an image file (e.g., JPG, PNG, etc.). You can export plots created with `{ggplot2}` by using the function `ggsave`.
+One key insight is that NBA player salaries follow an "inverted U" pattern with age: players aged **30–34** earn the highest average salaries, while younger and older players earn less. Additionally, **experience** has a stronger correlation with salary than age, as shown in the figure below:
+![image](https://github.com/user-attachments/assets/6b046d82-221a-4ac9-9e9b-608954cec98b)
 
 ## Repo Structure
 
-Use this section to explain the structure of your repo. This should help visitors quickly figure out where they should look to find certain elements. Further, you can use this space to highlight and briefly explain important/key files in the repo.
+├── data/                  # Raw and cleaned datasets (e.g., salaries, stats)
+├── plots/                 # Exported visualizations (PNG/JPG)
+├── scripts/               # R scripts for analysis and visualization
+├── report/                # Final Report PDF
+└── README.md              # This file
 
 ## Data Sources and Acknowledgements
-
-Be sure to list where you got any data used within the project. Be sure to acknowledge any one whose work or elements you're drawing upon.
+- **NBA Historical Statistics (1947–2025)**: Player performance data from [Basketball Reference](https://www.basketball-reference.com)
+- **NBA Salaries (2022–2023)**: Salary data compiled from public NBA contract records and sports data repositories like [Kaggle](https://www.kaggle.com)
+We acknowledge Basketball Reference and Kaggle for making high-quality, accessible datasets available.
 
 ## Authors
+- Khang Le  
+- Benson Zheng  
+- Joseph Doan
 
-Give information about who are the authors of the project and how people can get in touch if they have questions.
+For questions or feedback, please feel free to reach out via GitHub or email.
