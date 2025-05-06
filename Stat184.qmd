@@ -96,7 +96,7 @@ The datasets represent individual NBA players as the primary observational units
 
 # FAIR Data Principles Compliance
 
-Our analysis adheres to the FAIR data principles (Findable, Accessible, Interoperable, and Reusable) [@Wilkinson2016] in the following ways:
+Our analysis adheres to the FAIR data principles (Findable, Accessible, Interoperable, and Reusable) in the following ways:
 
 ## Findable
 
@@ -458,8 +458,6 @@ Future research could expand this analysis by incorporating more detailed perfor
 # References
 
 
-
-@Wilkinson2016. Wilkinson, M. D., Dumontier, M., Aalbersberg, I. J., Appleton, G., Axton, M., Baak, A., Blomberg, N., Boiten, J. W., da Silva Santos, L. B., Bourne, P. E., Bouwman, J., Brookes, A. J., Clark, T., Crosas, M., Dillo, I., Dumon, O., Edmunds, S., Evelo, C. T., Finkers, R., ... Mons, B. (2016). The FAIR Guiding Principles for scientific data management and stewardship. Scientific Data, 3, 160018. https://doi.org/10.1038/sdata.2016.18
 
 # Code Appendix
 
