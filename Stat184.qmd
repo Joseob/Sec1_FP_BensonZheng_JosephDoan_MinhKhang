@@ -455,11 +455,13 @@ Future research could expand this analysis by incorporating more detailed perfor
 
 # References
 @BasketballReference2025. (2025). Basketball Statistics & History of Every Team & NBA and WNBA Players. Basketball-Reference.com. https://www.basketball-reference.com/
+
 @NBASalaryCap2025. (2025). NBA Salary Cap History. Basketball Reference. https://www.basketball-reference.com/contracts/salary-cap-history.html
-@Datta, S. (2022). NBA, ABA, and BAA Stats. Kaggle. https://www.kaggle.com/datasets/sumitrodatta/nba-aba-baa-stats
-NBA Stats (1947-present)
-Regular Season Data from Basketball-Reference over 73+ Years
-@Welsh, J. (2023). NBA Player Salaries 2022-23 Season. Kaggle. https://www.kaggle.com/datasets/jamiewelsh2/nba-player-salaries-2022-23-season
+
+@Datta2022. (2022). NBA, ABA, and BAA Stats. Kaggle. https://www.kaggle.com/datasets/sumitrodatta/nba-aba-baa-stats
+
+@Welsh2023. (2023). NBA Player Salaries 2022-23 Season. Kaggle. https://www.kaggle.com/datasets/jamiewelsh2/nba-player-salaries-2022-23-season
+
 
 
 # Code Appendix
