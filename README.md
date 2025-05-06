@@ -20,9 +20,9 @@ One key insight is that NBA player salaries follow an "inverted U" pattern with 
 5. README.md               - This file
 
 ## Data Sources and Acknowledgements
-- **NBA Historical Statistics (1947–2025)**: Player performance data from [Basketball Reference](https://www.basketball-reference.com)
-- **NBA Salaries (2022–2023)**: Salary data compiled from public NBA contract records and sports data repositories like [Kaggle](https://www.kaggle.com)
-We acknowledge Basketball Reference and Kaggle for making high-quality, accessible datasets available.
+- **NBA Historical Statistics (1947–2025)**: Player performance data from [Kaggle](https://www.kaggle.com/datasets/sumitrodatta/nba-aba-baa-stats)
+- **NBA Salaries (2022–2023)**: Salary data compiled from public NBA contract records and sports data repositories like [Kaggle](https://www.kaggle.com/datasets/jamiewelsh2/nba-player-salaries-2022-23-season)
+We acknowledge Kaggle for making high-quality, accessible datasets available.
 
 ## Authors
 - Khang Le  
